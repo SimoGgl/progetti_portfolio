@@ -1,9 +1,10 @@
-to_do_list = ["cane"]
+to_do_list = []
 
 # Funzione per aggiungere attività
-def add_activity(activity, to_do_list):
-    to_do_list.append(activity)
-    input(f"Attività '{activity}' aggiunta alla lista con successo!")
+def add_activity(to_do_list):
+    activity_to_add = input("Inserisci un'attività: ")
+    to_do_list.append(activity_to_add)
+    print(f"Attività '{activity_to_add}' aggiunta alla lista con successo!")
 
 # Funzione per visualizzare le attività
 def see_activity(to_do_list):
@@ -17,13 +18,49 @@ def see_activity(to_do_list):
             print(f"{i}. {activity}")
 
 # Funzione per elimiare l'attività
-def delet_activity(activity, to_do_list):
-    try:
-        to_do_list.remove(activity)
-        print(f"L'attività '{activity}' è stata rimossa con successo")
-    except ValueError:
-        print(f"L'attività '{activity}' non è presente nella lista")
+def delete_activity(to_do_list):
+    if not to_do_list:
+        print("La lista è vuota. Non ci sono attività da eliminare.")
+        # se non ci sono attività da eliminare non esegue i passaggi sucessivi
+        return
+    
+    while True:
+        print("\nSottomenu Elimina attività:")
+        print("\t1. Elimina un'attività specifica")
+        print("\t2. Elimina l'ultima attività")
+        print("\t3. Torna al Menu")
 
+        choice = input("Cosa vuoi fare: ")
+
+        if choice == "1":
+            if not to_do_list:
+                print("La lista è vuota. Non ci sono attività da eliminare.")
+            else:
+                activity_to_delete = input("Quale attività vuoi rimuovere? ")
+                try:
+                    to_do_list.remove(activity_to_delete)
+                    print(f"Attività '{activity_to_delete}' eliminata con successo!")
+                except ValueError:
+                    print(f"L'attività '{activity_to_delete}' non è presente nella lista.")
+        elif choice == "2":
+            if not to_do_list:
+                print("La lista è vuota. Non ci sono attività da eliminare.")
+            else:
+                removed_activity = to_do_list.pop()  # Rimuove l'ultima attività
+                print(f"Attività '{removed_activity}' eliminata con successo!")
+        elif choice == "3":
+            print("Torno al menu principale.")
+            break
+        else:
+            print("Scelta non valida. Ritorno al menu principale.")
+
+# Dizionario che associa le opzioni del menu alle funzioni corrispondenti
+menu_options = {
+    1: add_activity,
+    2: see_activity,
+    3: delete_activity,
+    4: exit
+}
 
 on = True
 
@@ -44,22 +81,8 @@ while on:
         print("Inserisci un numero valido")
         continue
 
-    if action == 1:
-        activity_to_add = input("Inserisci un'attività: ") 
-        add_activity(activity_to_add, to_do_list)
-
-    elif action == 2:
-        see_activity(to_do_list)
-
-    elif action == 3:
-        if not to_do_list:
-            print("La lista è vuota. Non ci sono attività da eliminare.")
-        else:
-            activity_to_delet = input("Quale attività vuoi rimuovere? ")
-            delet_activity(activity_to_delet, to_do_list)
-
-    elif action == 4:
-        on = False
-
+    if action in menu_options:
+        # Esegue la funzione associata all'opzione
+        menu_options[action](to_do_list)
     else:
         print("Scelta non valida. Riprova.")
